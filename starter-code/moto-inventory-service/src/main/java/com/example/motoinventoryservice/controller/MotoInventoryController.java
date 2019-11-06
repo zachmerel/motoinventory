@@ -1,14 +1,26 @@
 package com.example.motoinventoryservice.controller;
 
 import com.example.motoinventoryservice.model.Motorcycle;
+import com.example.motoinventoryservice.util.feign.VinLookUpClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
-public class MotoInventoryController {
+@RefreshScope
+public class MotoInventoryController{
+
+    @Autowired
+    private final VinLookUpClient client;
+
+    public MotoInventoryController(VinLookUpClient client) {
+        this.client = client;
+    }
 
     @RequestMapping(value = "/motorcycles", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -55,5 +67,11 @@ public class MotoInventoryController {
 
         // do nothing here - in a real application we would update the entry in the backing data store
 
+    }
+
+    @RequestMapping(value = "/vehicle/{vin}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String,String> getVehcileInformation(@PathVariable String vin ){
+        return client.getVehcileInformation();
     }
 }
