@@ -2,6 +2,7 @@ package com.trilogyed.vinlookup.controller;
 
 import com.trilogyed.vinlookup.model.Vehicle;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

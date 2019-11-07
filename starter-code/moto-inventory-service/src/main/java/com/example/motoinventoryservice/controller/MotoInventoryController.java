@@ -1,9 +1,12 @@
 package com.example.motoinventoryservice.controller;
 
+import com.example.motoinventoryservice.dao.MotoInventoryDao;
 import com.example.motoinventoryservice.model.Motorcycle;
 import com.example.motoinventoryservice.util.feign.VinLookUpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +20,8 @@ public class MotoInventoryController{
 
     @Autowired
     private final VinLookUpClient client;
-
+    @Autowired
+    private MotoInventoryDao motoInventoryDao;
     public MotoInventoryController(VinLookUpClient client) {
         this.client = client;
     }
@@ -29,7 +33,7 @@ public class MotoInventoryController{
 
         motorcycle.setId(rnd.nextInt(9999));
 
-        return motorcycle;
+        return motoInventoryDao.addMotorcycle(motorcycle);
     }
 
     @RequestMapping(value = "/motorcycles/{motoId}", method = RequestMethod.GET)
@@ -39,15 +43,16 @@ public class MotoInventoryController{
            throw new IllegalArgumentException("MotoId must be greater than 0.");
         }
 
-        Motorcycle moto = new Motorcycle();
-        moto.setId(motoId);
-        moto.setVin("54321");
-        moto.setMake("Ducati");
-        moto.setModel("Multistrada Enduro");
-        moto.setYear("2018");
-        moto.setColor("Red");
-
-        return moto;
+//        Motorcycle moto = new Motorcycle();
+//        moto.setId(motoId);
+//        moto.setVin("54321");
+//        moto.setMake("Ducati");
+//        moto.setModel("Multistrada Enduro");
+//        moto.setYear("2018");
+//        moto.setColor("Red");
+//
+//        return moto;
+        return motoInventoryDao.getMotorcycle(motoId);
     }
 
     @RequestMapping(value = "/motorcycles/{motoId}", method = RequestMethod.DELETE)
@@ -57,7 +62,7 @@ public class MotoInventoryController{
         // the backing data store.
     }
 
-    @RequestMapping(value = "/motorcycles/{motoId}")
+    @PutMapping(value = "/motorcycles/{motoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMotorcycle(@RequestBody @Valid Motorcycle motorcycle, @PathVariable int motoId) {
         // make sure the motoId on the path matches the id of the motorcycle object
@@ -71,7 +76,7 @@ public class MotoInventoryController{
 
     @RequestMapping(value = "/vehicle/{vin}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Map<String,String> getVehcileInformation(@PathVariable String vin ){
-        return client.getVehcileInformation();
+    public Map<String,String> getVehicleInformation(@PathVariable String vin){
+        return client.getVehicleInformation(vin);
     }
 }
