@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Map;
 
-@FeignClient(name = "vin-lookup")
+@FeignClient(name = "VIN-LOOKUP")
 public interface VinLookUpClient {
 
     @RequestMapping(value = "/vehicle/{vin}", method = RequestMethod.GET)
-    public Map<String,String> getVehcileInformation();
+    public Map<String,String> getVehicleInformation(String vin);
 }
