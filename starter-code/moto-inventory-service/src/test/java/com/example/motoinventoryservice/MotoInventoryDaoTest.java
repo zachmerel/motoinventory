@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNull;
 public class MotoInventoryDaoTest {
 
     @Autowired
-    protected MotoInventoryDao dao;
+    private MotoInventoryDao dao;
 
     @Before
     public void setUp() throws Exception {
@@ -120,7 +120,7 @@ public class MotoInventoryDaoTest {
         assertEquals(1, mList.size());
 
         mList = dao.getMotorcyclesByMake("Ducati");
-        assertEquals(1, mList.size());
+        assertEquals(0, mList.size());
 
     }
 
